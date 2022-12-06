@@ -41,15 +41,15 @@ class FRRRouter(BGPRouter):
 
         with self.routerContext():
             self.cmd('install -m 640 -o frr -g frr frr.conf /etc/frr')
-            self.cmd('/usr/lib/frr/zebra -i ./zebra.pid -f /etc/frr/frr.conf --log file:./zebra.log -d')
-            self.cmd('/usr/lib/frr/ripd -i ./ripd.pid -f /etc/frr/frr.conf --log file:./ripd.log -d')
-            self.cmd('/usr/lib/frr/bgpd -i ./bgpd.pid -f /etc/frr/frr.conf --log file:./bgpd.log -d')
+            self.cmd('zebra -f /etc/frr/frr.conf --log file:./zebra.log -d')
+            self.cmd('ripd -f /etc/frr/frr.conf --log file:./ripd.log -d')
+            self.cmd('bgpd -f /etc/frr/frr.conf --log file:./bgpd.log -d')
 
     def terminate(self):
         with self.routerContext():
-            self.cmd('kill -9 `cat ./zebra.pid`')
-            self.cmd('kill -9 `cat ./ripd.pid`')
-            self.cmd('kill -9 `cat ./bgpd.pid`')
+            self.cmd('kill -9 `cat /var/run/frr/zebra.pid`')
+            self.cmd('kill -9 `cat /var/run/frr/ripd.pid`')
+            self.cmd('kill -9 `cat /var/run/frr/bgpd.pid`')
 
         super(FRRRouter, self).terminate()
 
