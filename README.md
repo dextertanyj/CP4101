@@ -12,7 +12,7 @@
 
 1. Clone Mininet repository.
    ```
-   $ git clone https://github.com/mininet/mininet
+   $ git clone https://github.com/mininet/mininet.git
    $ cd mininet
    ```
 1. (Optional) Checkout latest stable release.
@@ -105,7 +105,7 @@
 1. Install dependencies.
    ```
    $ sudo apt-get update
-   $ sudo apt-get install autoconf gcc flex bison libncurses-dev libreadline-dev
+   $ sudo apt-get install autoconf gcc make flex bison libncurses-dev libreadline-dev
    ```
 1. Clone BIRD repository
    ```
