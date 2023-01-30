@@ -1,3 +1,6 @@
 [submodule "frr"]
 	path = frr
 	url = git@github.com:dextertanyj/frr.git
+[submodule "bird"]
+	path = bird
+	url = git@github.com:dextertanyj/bird.git
