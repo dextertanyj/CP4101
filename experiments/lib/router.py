@@ -17,8 +17,10 @@ class BGPRouter(Node):
     def config(self, **params):
         super(BGPRouter, self).config(**params)
         self.cmd('sysctl net.ipv4.ip_forward=1')
-        if 'lo' in params:
-            self.setHostRoute(params['lo'], 'lo')
+        if 'local' in params:
+            self.cmd('ip link add local type dummy')
+            self.cmd('ip link set dev local up')
+            self.cmd(f'ip addr add {params["local"]} brd {params["local"].split("/")[0]} dev local')
 
     def terminate(self):
         self.cmd('sysctl net.ipv4.ip_forward=0')
@@ -42,11 +44,15 @@ class FRRRouter(BGPRouter):
 
         with self.routerContext():
             self.cmd('install -m 640 -o frr -g frr frr.conf /etc/frr')
+            self.cmd(f'echo "hostname {self.name}" > /etc/frr/vtysh.conf')
+            self.cmd('echo "1" | tee -a /proc/sys/net/mpls/conf/*/input')
+            self.cmd('echo "1048575" > /proc/sys/net/mpls/platform_labels')
             self.cmd('zebra -f /etc/frr/frr.conf --log file:./zebra.log --log-level debugging -d')
             self.cmd('staticd -f /etc/frr/frr.conf --log file:./staticd.log --log-level debugging -d')
             self.cmd('ripd -f /etc/frr/frr.conf --log file:./ripd.log --log-level debugging -d')
             self.cmd('bgpd -f /etc/frr/frr.conf --log file:./bgpd.log --log-level debugging -d')
             self.cmd('ldpd -f /etc/frr/frr.conf --log file:./ldpd.log --log-level debugging -d')
+            self.cmd('ospfd -f /etc/frr/frr.conf --log file:./ospfd.log --log-level debugging -d')
 
     def terminate(self):
         with self.routerContext():

@@ -7,7 +7,7 @@ from mininet.topo import Topo
 @dataclass
 class RouterInfo:
     name: str
-    lo_ip: str
+    local_ip: str
     core_ip: str
     host_subnet_prefix: str
     local_switch: str
@@ -55,10 +55,10 @@ class AutonomousSystem:
             as_prefix = AutonomousSystem.getASPrefix(self.asn)
             router_name = f'r{self.asn + idx * 10}'
             host_subnet_prefix = f'10.{as_prefix}.{idx}'
-            lo_ip = f'127.0.{as_prefix}.{idx}'
+            local_ip = f'100.100.{as_prefix}.{idx}'
             core_ip = f'192.168.{as_prefix}.{idx}'
             switch_name = f's{self.asn + idx * 10}'
-            router_info = RouterInfo(router_name, lo_ip, core_ip, host_subnet_prefix, switch_name)
+            router_info = RouterInfo(router_name, local_ip, core_ip, host_subnet_prefix, switch_name)
             self.routers.append(router_info)
             self.switches.append(switch_name)  # Local switch to hosts
             self.links.append([router_name, f'S{self.asn}'])  # Link to core switch
@@ -74,7 +74,7 @@ class AutonomousSystem:
             topology.addSwitch(switch)
         for router in self.routers:
             topology.addNode(router.name, cls=self.router_type, ip=None,
-                             lo=router.lo_ip)
+                             local=router.local_ip)
             topology.addLink(router.name, router.local_switch, intfName1=router.getInterface(),
                              params1={'ip': f'{router.host_subnet_prefix}.254/24'})
             topology.addLink(router.name, self.switches[0], intfName1=router.getInterface(),
