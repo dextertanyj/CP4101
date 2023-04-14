@@ -16,15 +16,16 @@ from lib import autonomoussystem, router  # NOQA
 net = None
 
 
-class BasicTopo(Topo):
+class NetworkTopo(Topo):
     """
-    AS 1 contains 2 hosts.
-    AS 2 contains 1 host.
-    AS 3 contains 3 hosts.
-    AS 4 contains 2 hosts.
+    AS 1 contains 1 host.
+    AS 2 contains 0 hosts.
+    AS 3 contains 0 hosts.
+    AS 4 contains 1 host.
 
-    AS 1 provides AS 2.
-    AS 2 provides AS 4 and peers with AS 3.
+    AS 1 provides AS 2 and AS 3.
+    AS 2 provides AS 4.
+    AS 3 provides AS 4.
     """
 
     def build(self):
@@ -63,7 +64,7 @@ class BasicTopo(Topo):
 
 def startNetwork():
     info('*** Creating the network\n')
-    topology = BasicTopo()
+    topology = NetworkTopo()
 
     global net
     net = Mininet(topo=topology, link=Link, autoSetMacs=True)
