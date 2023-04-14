@@ -79,6 +79,12 @@
        --enable-configfile-mask=0640 \
        --enable-logfile-mask=0640
    ```
+1. Add the following lines to `/etc/modules-load.d/modules.conf`.
+   ```
+   # Load MPLS Kernel Modules
+   mpls_router
+   mpls_iptunnel
+   ```
 1. Build and install FRR.
    ```
    $ make
